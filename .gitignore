@@ -1,1 +1,4 @@
 node_modules/
+assignment/node_modules/
+assignment/package.json
+assignment/package-lock.json

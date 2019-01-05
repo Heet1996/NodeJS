@@ -13,6 +13,6 @@ app.use((req,res,next)=>{
     res.send("<h1>Hello World</h1>");
     next(); //Goto next middleware
 });
-const server= http.createServer(app);
+// const server= http.createServer(app);
 //Sever is listen at this port
-server.listen('3000');
+app.listen('3000');
