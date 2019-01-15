@@ -1,4 +1,5 @@
 const http=require('http');
+const path=require('path');
 // const requestHandler=require('./route');
 
 const express=require('express');
@@ -10,7 +11,8 @@ const shopRouter=require('./routes/shop');
 const pageErrorRouter=require('./routes/pageError');
 //Below function will register in event loop and returns a server
 // const server= http.createServer(requestHandler(req,res));
-
+//Adding Static pages
+app.use(express.static(path.join(__dirname,'public')));
 //Reistering body-parser
 
 app.use(bodyParser.urlencoded({extended:false}));
