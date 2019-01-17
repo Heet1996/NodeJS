@@ -23,7 +23,7 @@ app.use('/admin',adminRouter);
 //Router for users
 app.use(shopRouter);
 //Router for error
-app.use(pageErrorRouter)
+app.use(pageErrorRouter);
 // const server= http.createServer(app);
 //Sever is listen at this port
 app.listen('3000');
