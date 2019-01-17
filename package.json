@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "compile:scss":"node-sass public/scss/main.scss public/css/style.css"
-    
+    "compile:scss": "node-sass public/scss/main.scss public/css/style.css"
   },
   "repository": {
     "type": "git",
@@ -26,6 +25,9 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.4"
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "pug": "^2.0.3"
   }
 }
