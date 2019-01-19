@@ -17,6 +17,11 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.use(bodyParser.urlencoded({extended:false}));
 
+//Setting up View engine
+
+app.set('view engine','pug');
+app.set('views','views');
+
 //Router for admins
 app.use('/admin',adminRouter);
 //Registering for middleware
