@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 //Setting up View engine
 
-app.set('view engine','pug');
+app.set('view engine','ejs');
 app.set('views','views');
 
 //Router for admins
