@@ -1,10 +1,12 @@
 const express=require('express');
-const path=require('path');
 const router= express.Router();
 
-const rootDir=require('../utils/path');
+
+const users=require('./assignment4').users;
+
 router.use('/users',(req,res)=>{
-    res.sendFile(path.join(rootDir,"public","users_assignment3.html"));
+    console.log(users);
+    res.render("users_assignment4",{users});
 });
 
 module.exports=router;

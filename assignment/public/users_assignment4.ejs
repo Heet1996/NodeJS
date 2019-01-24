@@ -9,6 +9,11 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <h1>Users Body</h1>
+    <ul>
+        <% for(let i of users){ %>
+        <li><%=i %></li>
+        <%} %>
+    </ul>
+
 </body>
 </html>
