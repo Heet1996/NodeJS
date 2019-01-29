@@ -1,13 +1,17 @@
-const products=[];
-
+const Products=require('../models/products');
 exports.getAddProduct=(req,res)=>{
-    res.render("add-product",{path:"/admin/add-products",docTitle:'Admin'})
+    res.render("admin/add-product",{path:"/admin/add-products",docTitle:'Admin'})
 };
 exports.postAddProduct=(req,res)=>{
-    products.push({'title':req.body.title});
+    let product=new Products(req.body.title);
+    product.save();
     res.redirect("/");
 }
 exports.getUserProducts=(req,res)=>{
     
-    res.render("shop",{products,docTitle:'Shop',path:'/shop'});
+    Products.fetchAll((products)=>{
+        res.render("shop/product-list",{products:products,docTitle:'Product List',path:'/shop'});
+    });
+    
+    
 }

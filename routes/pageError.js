@@ -5,5 +5,5 @@ var router=express.Router();
 
 let getErrorController=require('../controller/page-error');
 
-router.use(getErrorController.getErrorPage);
+router.use(getErrorController);
 module.exports=router;
