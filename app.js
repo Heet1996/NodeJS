@@ -6,8 +6,8 @@ const express=require('express');
 const app=express();
 
 const bodyParser=require('body-parser');
-const {adminRouter}=require('./routes/admin');
-const shopRouter=require('./routes/shop');
+const {adminRouter}=require('./routes/admin_router');
+const shopRouter=require('./routes/shop_router');
 const pageErrorRouter=require('./routes/pageError');
 //Below function will register in event loop and returns a server
 // const server= http.createServer(requestHandler(req,res));
