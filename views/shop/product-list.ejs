@@ -17,8 +17,13 @@
                     <p class="product__description">A very interesting book about so many even more interesting things!</p>
                 </div>
                 <div class="card__actions">
-                    <button class="btn">Add to Cart</button>
+                    <form method="POST" action="/add-to-cart">
+                        <a class="btn" href="product/<%=product.id %>">Details</a>
+                        <button class="btn">Add to Cart</button>
+                    </form>
                 </div>
+                
+                
             </article>
             <% }%>
         

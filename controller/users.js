@@ -19,3 +19,15 @@ exports.getUserCart=(req,res,next)=>{
 exports.getCheckoutPage=(req,res,next)=>{
     res.render('shop/checkout',{path:'/checkout',docTitle:'Checkout Page'})
 }
+
+exports.getOrders=(req,res)=>{
+    res.render('shop/orders',{path:'/orders',docTitle:'My Orders'});
+}
+
+exports.getProduct=(req,res)=>{
+    var productId=req.params.productId;
+    Products.findByProductId(productId,(product)=>{
+        res.render('shop/product-details',{path:'/orders',product:product,docTitle:'My Orders'})
+    })
+    
+}

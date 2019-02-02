@@ -19,6 +19,7 @@ module.exports=class Product
         this.description=description;
     }
     save(){
+        this.id=Math.random().toString();
         getProductFromFile((products)=>{
             products.push(this);
             fs.writeFile(path.join(rootDir,'data','products.json'),JSON.stringify(products),(err)=>{
@@ -31,6 +32,14 @@ module.exports=class Product
         
         getProductFromFile(clbck);
         
+    }
+    static findByProductId(productId,cb){
+        getProductFromFile(products=>{
+            console.log(products);
+            let product=products.find(product=> productId===product.id);
+            
+            cb(product);
+        })
     }
 }
 
