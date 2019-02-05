@@ -1,4 +1,5 @@
 const Products=require('../models/products');
+const Cart=require('../models/cart');
 exports.getIndexPage=(req,res)=>{
     Products.fetchAll((products)=>{
         res.render("shop/index",{products:products,docTitle:'Index Page',path:'/'});
@@ -15,7 +16,17 @@ exports.getUserProducts=(req,res)=>{
 exports.getUserCart=(req,res,next)=>{
     res.render('shop/cart',{path:'/cart',docTitle:'Cart'});
 }
-
+exports.postUserCart=(req,res,next)=>{
+    let productId=req.body.productId;
+    console.log("Parent1",productId);
+    Products.findByProductId(productId,(product)=>{
+        console.log("Parent2",product.id);
+        Cart.addProduct(product.id,parseInt(product.price));
+        res.redirect('/cart');
+    });
+    
+    
+}
 exports.getCheckoutPage=(req,res,next)=>{
     res.render('shop/checkout',{path:'/checkout',docTitle:'Checkout Page'})
 }
