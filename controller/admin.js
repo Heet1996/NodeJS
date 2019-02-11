@@ -1,9 +1,12 @@
 const Products=require('../models/products');
 exports.getAddProduct=(req,res)=>{
-    res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin'})
+    var editMode=req.query.edit;
+    console.log(editMode);
+    res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
 };
 exports.postAddProduct=(req,res)=>{
-    let product=new Products(req.body.title,req.body.imageUrl,req.body.price,req.body.description);
+    let product=new Products(null,req.body.title,req.body.imageUrl,req.body.price,req.body.description);
+    console.log(product);
     product.save();
     res.redirect("/");
 }
@@ -18,6 +21,16 @@ exports.getEditProduct=(req,res)=>{
          res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:product});
     });
 };
+
+exports.postEditProduct=(req,res,next)=>{
+    let productId=req.body.productId;
+    let title=req.body.title;
+    let imageUrl=req.body.imageUrl;
+    let price=req.body.price;
+    let description=req.body.description;
+    let product=new Products(productId,title,imageUrl,price,description);
+    product.save();
+}
 //Getting Products for admin
 exports.getAdminProducts=(req,res)=>{
     Products.fetchAll((products)=>{
@@ -25,3 +38,10 @@ exports.getAdminProducts=(req,res)=>{
     });
 }
 
+//Deleting Products
+
+exports.deleteProduct=(req,res)=>{
+    let id=req.body.productId;
+    Products.deleteProduct(id);
+    res.redirect('/');
+}
