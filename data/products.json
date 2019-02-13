@@ -1,1 +1,7 @@
-[{"id":"0.9885311140289363","title":"Cat","imageUrl":"https://www.commoncraft.com/sites/all/themes/orange/images/book-img.png","price":"13","description":"Asdfkj"}]
+[{
+    "id": "0.9885311140289363",
+    "title": "Cat",
+    "imageUrl": "https://www.commoncraft.com/sites/all/themes/orange/images/book-img.png",
+    "price": "13",
+    "description": "Asdfkj"
+}]

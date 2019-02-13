@@ -6,6 +6,7 @@ router.get("/product-list",userController.getUserProducts);
 router.get("/product/:productId",userController.getProduct);
 router.get("/cart",userController.getUserCart);
 router.post("/cart",userController.postUserCart);
+router.post("/cart-delete-item",userController.deleteUserCart);
 router.use("/checkout",userController.getCheckoutPage);
 router.use("/orders",userController.getOrders);
 module.exports=router;

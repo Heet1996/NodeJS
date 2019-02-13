@@ -3,5 +3,24 @@
     <%-include('../includes/navigation.ejs')  %>
         <main>
             <h1>Cart</h1>
+            <% if (products.length>0) { %>
+
+                <ul>
+                    <% for(product of products) { console.log(product); %>
+                     <li>
+                        <p><%=product.productDetails.title %> <%=product.qty %> </p> 
+                        <form action="/cart-delete-item" method="POST">
+                            <input type="hidden" value="<%=product.productDetails.id %>" name="productId" />
+                            <button type="submit" class="btn">Delete</button>
+                        </form> 
+                         
+                         
+                    </li>
+                    <% } %>   
+                </ul>
+
+            <% } else { %>
+                <h1>No products in Cart</h1>
+            <%  } %>    
         </main>
     <%-include('../includes/footer.ejs')  %>

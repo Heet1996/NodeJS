@@ -55,5 +55,9 @@ module.exports=class Cart
             });
         })
     }
+    static fetchAll(cb)
+    {
+        getProductFromCart(cb);
+    }
 
 }
