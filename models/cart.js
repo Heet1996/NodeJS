@@ -13,21 +13,22 @@ const getProductFromCart=(cb)=>{
 module.exports=class Cart
 {   
     static addProduct(id,productPrice)
-    {   console.log("Parent3",id);
+    {   
         //Fetch the product from file
         getProductFromCart((cart)=>{
             
             //Analyze the array product
-            let existingProduct=cart.products.find((p)=>p.id===id);
             let existingProductIndex=cart.products.findIndex((p)=>p.id===id);
+            let existingProduct=cart.products[existingProductIndex];
             if(existingProduct)
             {
-               let updatedProduct={...existingProduct};
+                let updatedProduct={...existingProduct};
                 updatedProduct.qty+=1;
                 cart.products=[...cart.products];
                 cart.products[existingProductIndex]=updatedProduct;
             } 
             else{
+                console.log("Hey");
                 let updatedProduct={id:id,qty:1};
                 cart.products=[...cart.products,updatedProduct];
             }   
@@ -46,10 +47,16 @@ module.exports=class Cart
     static deleteProduct(id,productPrice)
     {
         getProductFromCart((cart)=>{
+            
             let updatedCart={...cart};
+            
             let product=updatedCart.products.find((p)=>p.id==id);
+            if(!product) return;
             updatedCart.totalPrice=updatedCart.totalPrice-productPrice*product.qty;
-            updatedCart=updatedCart.products.filter((p)=>p.id!==id);
+            updatedCart.products=updatedCart.products.filter((p)=>p.id!==id);
+            
+            if(!updatedCart) updatedCart={products:[],totalPrice:0};
+            
             fs.writeFile(path.join(rootDir,'data','cart.json'),JSON.stringify(updatedCart),err=>{
                 console.log(err);
             });

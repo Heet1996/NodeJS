@@ -1,12 +1,10 @@
 const Products=require('../models/products');
 exports.getAddProduct=(req,res)=>{
     var editMode=req.query.edit;
-    console.log(editMode);
     res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
 };
 exports.postAddProduct=(req,res)=>{
     let product=new Products(null,req.body.title,req.body.imageUrl,req.body.price,req.body.description);
-    console.log(product);
     product.save();
     res.redirect("/");
 }

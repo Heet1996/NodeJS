@@ -64,7 +64,6 @@ module.exports=class Product
     }
     static findByProductId(productId,cb){
         getProductFromFile(products=>{
-            console.log(products);
             let product=products.find(product=> productId===product.id);
             
             cb(product);
