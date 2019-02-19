@@ -9,11 +9,13 @@ const bodyParser=require('body-parser');
 const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
 const pageErrorRouter=require('./routes/pageError');
+
+const db=require('./util/database');
 //Below function will register in event loop and returns a server
 // const server= http.createServer(requestHandler(req,res));
 //Adding Static pages
 app.use(express.static(path.join(__dirname,'public')));
-//Reistering body-parser
+//Registering body-parser
 
 app.use(bodyParser.urlencoded({extended:false}));
 
@@ -21,6 +23,7 @@ app.use(bodyParser.urlencoded({extended:false}));
 
 app.set('view engine','ejs');
 app.set('views','views');
+
 
 //Router for admins
 app.use('/admin',adminRouter);
@@ -31,4 +34,4 @@ app.use(shopRouter);
 app.use(pageErrorRouter);
 // const server= http.createServer(app);
 //Sever is listen at this port
-app.listen('3000');
+app.listen('8080');

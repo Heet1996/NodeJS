@@ -1,4 +1,5 @@
 const Products=require('../models/products');
+const db=require('../util/database');
 exports.getAddProduct=(req,res)=>{
     var editMode=req.query.edit;
     res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
@@ -31,9 +32,15 @@ exports.postEditProduct=(req,res,next)=>{
 }
 //Getting Products for admin
 exports.getAdminProducts=(req,res)=>{
-    Products.fetchAll((products)=>{
-        res.render("admin/products",{products:products,docTitle:'Product List',path:'/admin/products'});
-    });
+    // Products.fetchAll((products)=>{
+    //     res.render("admin/products",{products:products,docTitle:'Product List',path:'/admin/products'});
+    // });
+
+    Products.fetchAll().then(
+        ([rows,fields])=>{
+            res.render("admin/products",{products:rows,docTitle:'Product List',path:'/admin/products'});
+        }
+    ).catch((err)=>console.log(err));
 }
 
 //Deleting Products
