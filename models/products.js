@@ -64,7 +64,7 @@ module.exports=class Product
         //     });
         // });
     }
-    static findByProductId(productId,cb){
+    static findByProductId(productId){
         // getProductFromFile(products=>{
         //     let product=products.find(product=> productId===product.id);
             

@@ -32,15 +32,11 @@ exports.postEditProduct=(req,res,next)=>{
 }
 //Getting Products for admin
 exports.getAdminProducts=(req,res)=>{
-    // Products.fetchAll((products)=>{
-    //     res.render("admin/products",{products:products,docTitle:'Product List',path:'/admin/products'});
-    // });
+    Products.fetchAll((products)=>{
+        res.render("admin/products",{products:products,docTitle:'Product List',path:'/admin/products'});
+    });
 
-    Products.fetchAll().then(
-        ([rows,fields])=>{
-            res.render("admin/products",{products:rows,docTitle:'Product List',path:'/admin/products'});
-        }
-    ).catch((err)=>console.log(err));
+
 }
 
 //Deleting Products

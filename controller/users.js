@@ -7,10 +7,14 @@ exports.getIndexPage=(req,res)=>{
 }
 exports.getUserProducts=(req,res)=>{
     
-    Products.fetchAll((products)=>{
-        res.render("shop/product-list",{products:products,docTitle:'Product List',path:'/product-list'});
-    });
-    
+    // Products.fetchAll((products)=>{
+    //     res.render("shop/product-list",{products:products,docTitle:'Product List',path:'/product-list'});
+    // });
+    Products.fetchAll().then(
+        ([rows,fields])=>{
+            res.render("shop/product-list",{products:rows,docTitle:'Product List',path:'/product-list'});
+        }
+    ).catch((err)=>console.log(err));
     
 }
 exports.getUserCart=(req,res)=>{
