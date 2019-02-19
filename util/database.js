@@ -4,7 +4,7 @@ const connection=mysql.createPool({
     host:'localhost',
     user:'root',
     database:'ShoppingCart',
-    password:'23rdmay1996'
+    password:'*********'
 });
 
 module.exports=connection.promise();
