@@ -24,23 +24,25 @@ module.exports=class Product
     }
     save(){
         
-        // getProductFromFile((products)=>{
-        //     if(this.id){
-        //         const existingProductIndex=products.findIndex((id)=>id===this.id);
-        //         const updatedProducts=[...products];
-        //         updatedProducts[existingProductIndex]=this;
-        //         fs.writeFile(path.join(rootDir,'data','products.json'),JSON.stringify(updatedProducts),(err)=>{
-        //             console.log(err);
-        //         })
-        //     }
-        //     else{
-        //         this.id=Math.random().toString();
-        //         products.push(this);
-        //         fs.writeFile(path.join(rootDir,'data','products.json'),JSON.stringify(products),(err)=>{
-        //             console.log(err);
-        //         })
-        //     }
-        // })
+        /* getProductFromFile((products)=>{
+            if(this.id){
+                const existingProductIndex=products.findIndex((id)=>id===this.id);
+                const updatedProducts=[...products];
+                updatedProducts[existingProductIndex]=this;
+                fs.writeFile(path.join(rootDir,'data','products.json'),JSON.stringify(updatedProducts),(err)=>{
+                    console.log(err);
+                })
+            }
+            else{
+                this.id=Math.random().toString();
+                products.push(this);
+                fs.writeFile(path.join(rootDir,'data','products.json'),JSON.stringify(products),(err)=>{
+                    console.log(err);
+                })
+            }
+        }) */
+
+        return db.execute('INSERT INTO products (title,price,imageUrl,description) VALUES(?,?,?,?) ',[this.title,this.price,this.imageUrl,this.description]);
         
     }
     static fetchAll(){
@@ -70,6 +72,8 @@ module.exports=class Product
             
         //     cb(product);
         // })
+
+        return db.execute('SELECT * FROM products WHERE products.id= ?',[productId]);
     }
 }
 

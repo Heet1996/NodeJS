@@ -6,8 +6,10 @@ exports.getAddProduct=(req,res)=>{
 };
 exports.postAddProduct=(req,res)=>{
     let product=new Products(null,req.body.title,req.body.imageUrl,req.body.price,req.body.description);
-    product.save();
-    res.redirect("/");
+    product.save().then(()=>{
+        res.redirect('/');
+    }).catch((err)=>console.log(err));
+    
 }
 //Edit Product
 exports.getEditProduct=(req,res)=>{

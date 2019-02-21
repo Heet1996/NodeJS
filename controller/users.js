@@ -1,9 +1,13 @@
 const Products=require('../models/products');
 const Cart=require('../models/cart');
 exports.getIndexPage=(req,res)=>{
-    Products.fetchAll((products)=>{
-        res.render("shop/index",{products:products,docTitle:'Index Page',path:'/'});
-    });
+    Products.fetchAll().then(
+
+        ([rows,fields])=>{
+            console.log(rows);
+            res.render("shop/index",{products:rows,docTitle:'Product List',path:'/index'});
+        }
+    ).catch((err)=>console.log(err));
 }
 exports.getUserProducts=(req,res)=>{
     
@@ -74,9 +78,9 @@ exports.getOrders=(req,res)=>{
 
 exports.getProduct=(req,res)=>{
     var productId=req.params.productId;
-    Products.findByProductId(productId,(product)=>{
-        res.render('shop/product-details',{path:'/orders',product:product,docTitle:'My Orders'})
-    })
-    
+    Products.findByProductId(productId).then(([row])=>{
+        console.log(row);
+        res.render('shop/product-details',{path:'/orders',product:row[0],docTitle:'My Orders'})
+    }).catch((err)=>console.log(err));    
 }
 
