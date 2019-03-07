@@ -1,5 +1,6 @@
 const Products=require('../models/products');
-const db=require('../util/database');
+
+
 exports.getAddProduct=(req,res)=>{
     var editMode=req.query.edit;
     res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
@@ -9,12 +10,13 @@ exports.postAddProduct=(req,res)=>{
     const imageUrl=req.body.imageUrl;
     const price=req.body.price;
     const description=req.body.description
-    Products.create({
-        title:title,
-        imageUrl:imageUrl,
-        description:description,
-        price:price
-
+    // const userId=req.user.userId;
+    req.user
+    .createProduct({
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description
     }).then(()=>{
         res.redirect('/admin/products');
         
@@ -30,9 +32,10 @@ exports.getEditProduct=(req,res)=>{
     if(!editMode)
     return res.redirect('/');
     
-    Products.findById(productId)
-            .then((product)=>{
-                res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:product});
+    req.user.getProducts({where: {id:productId}})
+            .then((products)=>{
+
+                res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:products[0]});
            })
            .catch((err)=>console.log(err));
 };
