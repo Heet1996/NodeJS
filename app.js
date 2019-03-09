@@ -15,6 +15,8 @@ const User=require('./models/user');
 const Product=require('./models/products');
 const CartItem=require('./models/cartItem');
 const Cart=require('./models/cart');
+const Order=require('./models/order');
+const OrderItem=require('./models/orderItem');
 //Below function will register in event loop and returns a server
 // const server= http.createServer(requestHandler(req,res));
 //Adding Static pages
@@ -47,15 +49,20 @@ app.use(pageErrorRouter);
 // const server= http.createServer(app);
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
-
 User.hasOne(Cart);
 
 Cart.belongsToMany(Product,{through:CartItem});
 Product.belongsToMany(Cart,{through:CartItem});
 
+User.hasMany(Order);
+Order.belongsTo(User);
+
+Order.belongsToMany(Product,{through:OrderItem});
+
+
 sequelize
   // .sync({ force: true })
-  .sync()
+  .sync({force:true})
   .then(result => {
     return User.findById(1);
     // console.log(result);

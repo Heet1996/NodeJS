@@ -52,10 +52,11 @@ exports.getUserCart=(req,res)=>{
     req.user
     .getCart()
     .then(cart =>{
+        console.log(cart);
         return cart
                 .getProducts()
                 .then((products)=>{
-                    res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:cartProducts})
+                    res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:products})
 
                 })
                 .catch(err=>console.log(err));
@@ -64,21 +65,56 @@ exports.getUserCart=(req,res)=>{
 }
 exports.postUserCart=(req,res,next)=>{
     let productId=req.body.productId;
-    Products.findByProductId(productId,(product)=>{
-        Cart.addProduct(product.id,parseInt(product.price));
-        
-    });
-    
-    res.redirect('/cart');
+    let fecthCart;
+    let newQuantity=1;
+    req.user
+       .getCart()
+       .then((cart)=>{
+        fecthCart=cart;    
+        return cart.getProducts({where : {
+                id:productId
+            }})
+       }) 
+       .then((products)=>{
+            let product;
+            if(products.length>0)
+            product=products[0]
+            
+            if(product)
+            {
+                newQuantity+=product.cartItem.quantityItem;
+                return product             
+            }
+               
+            return Products.findById(productId)
+                            
+
+       })
+       .then((product)=>{
+        return fecthCart.addProduct(product,{through:{
+            quantityItem:newQuantity
+        }})
+    })
+    .then(()=>res.redirect('/cart'))
+    .catch((err)=>{console.log(`Can't add Product in cart :${err}`)})
+    .catch((err)=>console.log(`Can't get Cart : ${err}`))
 }
 exports.deleteUserCart=(req,res,next)=>{
     let productId=req.body.productId;
-    Products.fetchAll((products)=>{
-       let product =products.find((p)=>p.id===productId);
-       Cart.deleteProduct(productId,product.price); 
-       res.redirect('/cart');
-    });
-    
+    req.user.getCart()
+        .then((cart)=>{
+            return cart.getProducts({
+                where:{
+                    id:productId
+                }
+            })
+          .then((product)=>{
+            return product[0].cartItem.destroy();
+            
+          })  
+          .then(()=>res.redirect('/'))
+    })
+    .catch((err)=>console.log(`Can't get Cart : ${err}`))
 }
 exports.getCheckoutPage=(req,res,next)=>{
     res.render('shop/checkout',{path:'/checkout',docTitle:'Checkout Page'})
@@ -93,5 +129,9 @@ exports.getProduct=(req,res)=>{
     Products.findAll({where:{id:productId}}).then((row)=>{
         res.render('shop/product-details',{path:'/orders',product:row[0],docTitle:'My Orders'});
     }).catch((err)=>console.log(err));    
+}
+
+exports.checkout=(req,res)=>{
+    
 }
 
