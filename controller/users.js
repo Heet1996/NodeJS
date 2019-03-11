@@ -52,7 +52,7 @@ exports.getUserCart=(req,res)=>{
     req.user
     .getCart()
     .then(cart =>{
-        console.log(cart);
+
         return cart
                 .getProducts()
                 .then((products)=>{
@@ -131,7 +131,29 @@ exports.getProduct=(req,res)=>{
     }).catch((err)=>console.log(err));    
 }
 
-exports.checkout=(req,res)=>{
-    
+exports.postOrder=(req,res)=>{
+        req.user.getCart()
+                .then((cart)=>{
+                    return cart.getProducts()
+                })
+                .then((products)=>{
+                    return req.user
+                        .createOrder()
+                        .then(order=>{
+                            console.log("done");
+                           return order.addProducts(
+                                products.map(product=>{
+                                    product.orderItem={quantity:product.cartItem.quantity};
+                                    return product;
+                                })
+                            )
+                        })
+                        .then(result=>{
+
+                            res.redirect('/orders');
+                        })
+                        .catch((err)=>console.log(err)) 
+                })
+                .catch((err)=>console.log(`Cannot find Products : ${err}`))
 }
 
