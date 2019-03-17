@@ -1,22 +1,17 @@
-const http=require('http');
 const path=require('path');
 // const requestHandler=require('./route');
 
 const express=require('express');
 const app=express();
-const sequelize=require('./util/database');
+const mongoConnect=require('./util/database').mongoConnect;
+
 
 const bodyParser=require('body-parser');
 const {adminRouter}=require('./routes/admin_router');
-const shopRouter=require('./routes/shop_router');
-const pageErrorRouter=require('./routes/pageError');
+// const shopRouter=require('./routes/shop_router');
+// const pageErrorRouter=require('./routes/pageError');
 
-const User=require('./models/user');
-const Product=require('./models/products');
-const CartItem=require('./models/cartItem');
-const Cart=require('./models/cart');
-const Order=require('./models/order');
-const OrderItem=require('./models/orderItem');
+
 //Below function will register in event loop and returns a server
 // const server= http.createServer(requestHandler(req,res));
 //Adding Static pages
@@ -26,12 +21,13 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({extended:false}));
 
 app.use((req, res, next) => {
-    User.findById(1)
-      .then(user => {
-        req.user = user;
-        next();
-      })
-      .catch(err => console.log(err));
+    // User.findById(1)
+    //   .then(user => {
+    //     req.user = user;
+    //     next();
+    //   })
+    //   .catch(err => console.log(err));
+    next();
   });
 //Setting up View engine
 
@@ -43,43 +39,14 @@ app.set('views','views');
 app.use('/admin',adminRouter);
 //Registering for middleware
 //Router for users
-app.use(shopRouter);
+// app.use(shopRouter);
 //Router for error
-app.use(pageErrorRouter);
+// app.use(pageErrorRouter);
 // const server= http.createServer(app);
-Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
-User.hasMany(Product);
-User.hasOne(Cart);
 
-Cart.belongsToMany(Product,{through:CartItem});
-Product.belongsToMany(Cart,{through:CartItem});
-
-User.hasMany(Order);
-Order.belongsTo(User);
-
-Order.belongsToMany(Product,{through:OrderItem});
+mongoConnect(()=>{
+  app.listen('3000');
+  
+})
 
 
-sequelize
-  // .sync({ force: true })
-  .sync()
-  .then(result => {
-    return User.findById(1);
-    // console.log(result);
-  })
-  .then(user => {
-    if (!user) {
-      return User.create({ name: 'Max', email: 'test@test.com' });
-    }
-    return user;
-  })
-  .then((user)=>{
-      return user.createCart();
-  })
-  .then(cart => {
-    // console.log(user);
-    app.listen(3000);
-  })
-  .catch(err => {
-    console.log(err);
-  });
