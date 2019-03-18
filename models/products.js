@@ -1,4 +1,5 @@
 const {get_db}=require('../util/database');
+const mongodb=require('mongodb');
 class Products
 {
     constructor(title,price,description,imageUrl)
@@ -18,6 +19,22 @@ class Products
               
           })  
           .catch((err)=>console.log(err));
+    }
+    static fetchAll()
+    {   let db=get_db();
+        return db.collection('products')
+                 .find()
+                 .toArray()
+                 .then((products)=>products)
+                 .catch((err)=>console.log(err))   
+    }
+    static findById(id)
+    {
+        let db=get_db();
+        return db.collection('products')
+                 .findOne({_id:new mongodb.ObjectID(id)})
+                 .then((product)=>product)
+                 .catch((err)=>console.log(err))   
     }
 }
 

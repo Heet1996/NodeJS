@@ -8,7 +8,7 @@ const mongoConnect=require('./util/database').mongoConnect;
 
 const bodyParser=require('body-parser');
 const {adminRouter}=require('./routes/admin_router');
-// const shopRouter=require('./routes/shop_router');
+const shopRouter=require('./routes/shop_router');
 // const pageErrorRouter=require('./routes/pageError');
 
 
@@ -39,7 +39,7 @@ app.set('views','views');
 app.use('/admin',adminRouter);
 //Registering for middleware
 //Router for users
-// app.use(shopRouter);
+app.use(shopRouter);
 //Router for error
 // app.use(pageErrorRouter);
 // const server= http.createServer(app);
