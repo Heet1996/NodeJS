@@ -9,6 +9,9 @@ const mongoConnect=require('./util/database').mongoConnect;
 const bodyParser=require('body-parser');
 const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
+const User=require('./models/user');
+
+
 // const pageErrorRouter=require('./routes/pageError');
 
 
@@ -21,13 +24,13 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({extended:false}));
 
 app.use((req, res, next) => {
-    // User.findById(1)
-    //   .then(user => {
-    //     req.user = user;
-    //     next();
-    //   })
-    //   .catch(err => console.log(err));
-    next();
+    User.findById('5c9a4777703f04403c3bcd26')
+      .then(user => {
+        req.user = user;
+        next();
+      })
+      .catch(err => console.log(err));
+    
   });
 //Setting up View engine
 
@@ -45,6 +48,7 @@ app.use(shopRouter);
 // const server= http.createServer(app);
 
 mongoConnect(()=>{
+  
   app.listen('3000');
   
 })
