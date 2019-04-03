@@ -22,84 +22,63 @@ exports.getUserProducts=(req,res)=>{
     ).catch((err)=>console.log(err));
     
 }
-// exports.getUserCart=(req,res)=>{
-//     // Cart.fetchAll((cart)=>{
-//     //     if(!cart) return;
-//     //     Products.fetchAll((allProducts)=>{
-//     //         if(!allProducts) return;
-//     //         let cartProducts=[];
-            
-//     //         for (product of allProducts)
-//     //         {   
-//     //             const cartProductsData=cart.products.find((p)=>p.id===product.id);
-                
-//     //             if(cartProductsData)
-//     //             {
-//     //                 cartProducts.push({productDetails:product,qty:cartProductsData.qty});
-//     //             }
-            
-                
-//     //         }
-            
-//     //         res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:cartProducts});
-            
-            
-//     //     });
-        
-        
-//     // });
+exports.getUserCart=(req,res)=>{
     
 
-//     req.user
-//     .getCart()
-//     .then(cart =>{
+    req.user
+    .getCart()
+    .then(cart =>{
 
-//         return cart
-//                 .getProducts()
-//                 .then((products)=>{
-//                     res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:products})
+        return cart
+                .getProducts()
+                .then((products)=>{
+                    res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:products})
 
-//                 })
-//                 .catch(err=>console.log(err));
-//     })
-//     .catch(err =>console.log(err));
-// }
-// exports.postUserCart=(req,res,next)=>{
-//     let productId=req.body.productId;
-//     let fecthCart;
-//     let newQuantity=1;
-//     req.user
-//        .getCart()
-//        .then((cart)=>{
-//         fecthCart=cart;    
-//         return cart.getProducts({where : {
-//                 id:productId
-//             }})
-//        }) 
-//        .then((products)=>{
-//             let product;
-//             if(products.length>0)
-//             product=products[0]
+                })
+                .catch(err=>console.log(err));
+    })
+    .catch(err =>console.log(err));
+}
+exports.postUserCart=(req,res,next)=>{
+    let productId=req.body.productId;
+    req.user
+    .addToCart(productId)
+    .then((result)=>console.log("Added to cart"))
+    .catch((err)=>console.log(err))
+    
+       
+    // req.user
+    //    .getCart()
+    //    .then((cart)=>{
+    //     fecthCart=cart;    
+    //     return cart.getProducts({where : {
+    //             id:productId
+    //         }})
+    //    }) 
+    //    .then((products)=>{
+    //         let product;
+    //         if(products.length>0)
+    //         product=products[0]
             
-//             if(product)
-//             {
-//                 newQuantity+=product.cartItem.quantityItem;
-//                 return product             
-//             }
+    //         if(product)
+    //         {
+    //             newQuantity+=product.cartItem.quantityItem;
+    //             return product             
+    //         }
                
-//             return Products.findById(productId)
+    //         return Products.findById(productId)
                             
 
-//        })
-//        .then((product)=>{
-//         return fecthCart.addProduct(product,{through:{
-//             quantityItem:newQuantity
-//         }})
-//     })
-//     .then(()=>res.redirect('/cart'))
-//     .catch((err)=>{console.log(`Can't add Product in cart :${err}`)})
-//     .catch((err)=>console.log(`Can't get Cart : ${err}`))
-// }
+    //    })
+    //    .then((product)=>{
+    //     return fecthCart.addProduct(product,{through:{
+    //         quantityItem:newQuantity
+    //     }})
+    // })
+    // .then(()=>res.redirect('/cart'))
+    // .catch((err)=>{console.log(`Can't add Product in cart :${err}`)})
+    // .catch((err)=>console.log(`Can't get Cart : ${err}`))
+}
 // exports.deleteUserCart=(req,res,next)=>{
 //     let productId=req.body.productId;
 //     req.user.getCart()
