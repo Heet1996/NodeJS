@@ -24,18 +24,11 @@ exports.getUserProducts=(req,res)=>{
 }
 exports.getUserCart=(req,res)=>{
     
-
+    
     req.user
     .getCart()
-    .then(cart =>{
-
-        return cart
-                .getProducts()
-                .then((products)=>{
-                    res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:products})
-
-                })
-                .catch(err=>console.log(err));
+    .then(products =>{
+    res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:products})
     })
     .catch(err =>console.log(err));
 }
@@ -43,7 +36,7 @@ exports.postUserCart=(req,res,next)=>{
     let productId=req.body.productId;
     req.user
     .addToCart(productId)
-    .then((result)=>console.log("Added to cart"))
+    .then((result)=>res.redirect('/cart'))
     .catch((err)=>console.log(err))
     
        
@@ -79,23 +72,12 @@ exports.postUserCart=(req,res,next)=>{
     // .catch((err)=>{console.log(`Can't add Product in cart :${err}`)})
     // .catch((err)=>console.log(`Can't get Cart : ${err}`))
 }
-// exports.deleteUserCart=(req,res,next)=>{
-//     let productId=req.body.productId;
-//     req.user.getCart()
-//         .then((cart)=>{
-//             return cart.getProducts({
-//                 where:{
-//                     id:productId
-//                 }
-//             })
-//           .then((product)=>{
-//             return product[0].cartItem.destroy();
-            
-//           })  
-//           .then(()=>res.redirect('/'))
-//     })
-//     .catch((err)=>console.log(`Can't get Cart : ${err}`))
-// }
+exports.deleteUserCart=(req,res,next)=>{
+    let productId=req.body.productId;
+    req.user
+       .deleteFromCart(productId)
+       .then(()=>res.redirect('/cart')) 
+}
 // exports.getCheckoutPage=(req,res,next)=>{
 //     res.render('shop/checkout',{path:'/checkout',docTitle:'Checkout Page'})
 // }

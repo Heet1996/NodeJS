@@ -22,7 +22,7 @@ class User
         const db=get_db();
         let productIds=this.cart.items.map((i)=>i.productId);
 
-        db.collection('products')
+        return db.collection('products')
           .find({_id:{$in:productIds}})
           .toArray()
           .then((products)=>{
@@ -30,11 +30,14 @@ class User
                 return {
                     ...p,
                     quantity:this.cart.items.find((i)=>{
+
                         return i.productId.toString()==p._id.toString();
                     }).quantity
                 }
             })
-          })  
+          })
+          
+          .catch((err)=>console.log(err))  
     }
     addToCart(productId)
     {   
@@ -64,6 +67,19 @@ class User
                    {_id:new ObjectId(this._id)},
                    {$set: {cart:updatedCart}}
                );
+    }
+    deleteFromCart(productId)
+    {
+        const updatedCartItems=this.cart.items.filter((product)=>{
+                return product.productId!==productId
+        });
+        const db=get_db();
+       return db.collection('user')
+          .updateOne({
+             _id:new ObjectId(this._id) 
+          },{$set :{cart:{items: updatedCartItems}}}) 
+          .then((result)=>console.log(result))
+          .catch((err)=>console.log(err)) 
     }
     static findById(id)
     {
