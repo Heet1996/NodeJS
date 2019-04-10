@@ -15,7 +15,7 @@ class User
         let db=get_db();
         return db.collection('users')
                 .insertOne(this) 
-                .then((user)=>console.log(user))
+                .then((user)=>console.log("user"))
     }
     getCart()
     {
@@ -70,16 +70,52 @@ class User
     }
     deleteFromCart(productId)
     {
-        const updatedCartItems=this.cart.items.filter((product)=>{
-                return product.productId!==productId
+        
+        const updatedCartItems=this.cart.items.filter((product)=> {
+        
+            return product.productId!=productId;
         });
+        
         const db=get_db();
-       return db.collection('user')
+        
+       return db.collection('users')
           .updateOne({
              _id:new ObjectId(this._id) 
           },{$set :{cart:{items: updatedCartItems}}}) 
-          .then((result)=>console.log(result))
+          .then((result)=>console.log("Delete Done"))
           .catch((err)=>console.log(err)) 
+    }
+    addOrder()
+    {
+        const db=get_db();
+        return this.getCart()
+            .then((products)=>{
+                const order={
+                    products:products,
+                    user:{
+                        _id:new ObjectId(this._id),
+                        name:this.name
+                    }
+                    
+                }
+                return db.collection('orders')
+                        .insert(order)
+                          
+            })
+            .then(()=>{
+                return db
+                        .collection('users')
+                        .updateOne({_id:new ObjectId(this._id)},{$set: {cart : {items :[]}}})
+        });
+    }
+    getOrders()
+    {
+        const db=get_db();
+
+        return db.collection('orders')
+                 .find({'user._id':new ObjectId(this._id)})
+                 .toArray()
+                   
     }
     static findById(id)
     {

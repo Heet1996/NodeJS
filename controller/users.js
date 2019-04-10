@@ -82,13 +82,13 @@ exports.deleteUserCart=(req,res,next)=>{
 //     res.render('shop/checkout',{path:'/checkout',docTitle:'Checkout Page'})
 // }
 
-// exports.getOrders=(req,res)=>{
-//     req.user
-//         .getOrders({include:['products']})
-//         .then((orders)=>res.render('shop/orders',{path:'/orders',docTitle:'My Orders',orders:orders}))
-//         .catch((err)=>console.log(err))
+exports.getOrders=(req,res)=>{
+    req.user
+        .getOrders()
+        .then((orders)=>res.render('shop/orders',{path:'/orders',docTitle:'My Orders',orders:orders}))
+        .catch((err)=>console.log(err))
     
-// }
+}
 
 exports.getProduct=(req,res)=>{
     var productId=req.params.productId;
@@ -97,31 +97,13 @@ exports.getProduct=(req,res)=>{
     }).catch((err)=>console.log(err));    
 }
 
-// exports.postOrder=(req,res)=>{
-//         let fetchedCart;
-//         req.user.getCart()
-//                 .then((cart)=>{
-//                     fetchedCart=cart;
-//                     return cart.getProducts()
-//                 })
-//                 .then((products)=>{
-//                     return req.user
-//                         .createOrder()
-//                         .then(order=>{
-                            
-//                            return order.addProducts(
-//                                 products.map(product=>{
-//                                     product.orderItem={quantityItem:product.cartItem.quantityItem};
-//                                     return product;
-//                                 })
-//                             )
-//                         })
-//                         .then(result=>{
-//                             fetchedCart.setProducts(null);
-//                             res.redirect('/orders');
-//                         })
-//                         .catch((err)=>console.log(err)) 
-//                 })
-//                 .catch((err)=>console.log(`Cannot find Products : ${err}`))
-// }
+exports.postOrder=(req,res)=>{
+        
+        req.user.addOrder()
+                        .then(result=>{
+                            res.redirect('/orders');
+                        })
+                        .catch((err)=>console.log(err)) 
+                }
+                
 

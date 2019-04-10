@@ -6,7 +6,7 @@
             <% if (products.length>0) { %>
 
                 <ul>
-                    <% for(product of products) { console.log(product); %>
+                    <% for(product of products) {  %>
                      <li>
                         <p><%=product.title %> (<%=product.quantity %>) </p> 
                         <form action="/cart-delete-item" method="POST">
