@@ -26,6 +26,15 @@ class User
           .find({_id:{$in:productIds}})
           .toArray()
           .then((products)=>{
+            if(products.length!=productIds.length)
+            {let updatedCart=products;
+             db.collection('users')
+                .updateOne(
+                    {_id:new ObjectId(this._id)},
+                    {$set: {'cart.items':updatedCart}}
+                );
+            }
+
             return products.map(p=>{
                 return {
                     ...p,

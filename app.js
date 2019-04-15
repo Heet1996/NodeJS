@@ -4,7 +4,7 @@ const path=require('path');
 const express=require('express');
 const app=express();
 const mongoConnect=require('./util/database').mongoConnect;
-
+const mongoose=require('mongoose');
 
 const bodyParser=require('body-parser');
 const {adminRouter}=require('./routes/admin_router');
@@ -47,10 +47,11 @@ app.use(shopRouter);
 // app.use(pageErrorRouter);
 // const server= http.createServer(app);
 
-mongoConnect(()=>{
-  
-  app.listen('3000');
-  
-})
-
+mongoose.connect('mongodb+srv://hs_1996:23rdmay1996@cluster0-pppnf.mongodb.net/shop?retryWrites=true')
+        .then(()=>{
+          app.listen('3000')
+        })
+        .catch((err)=>{
+          console.log(err);
+        })
 
