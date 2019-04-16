@@ -10,9 +10,9 @@ exports.postAddProduct=(req,res)=>{
     const imageUrl=req.body.imageUrl;
     const price=req.body.price;
     const description=req.body.description
-    const userId=req.user._id;
+    // const userId=req.user._id;
     // const userId=req.user.userId;
-    let product=new Products(title,price,description,imageUrl,null,userId);
+    let product=new Products({title:title,imageUrl:imageUrl,price:price,description:description})
     
     product.save()
             .then((result)=>{
@@ -21,7 +21,7 @@ exports.postAddProduct=(req,res)=>{
             })  
             .catch(err=>console.log(err))  
 }
-//Edit Product
+// //Edit Product
 exports.getEditProduct=(req,res)=>{
     var editMode=req.query.edit;
     var productId=req.params.productId;
@@ -42,30 +42,27 @@ exports.postEditProduct=(req,res,next)=>{
     let imageUrl=req.body.imageUrl;
     let price=req.body.price;
     let description=req.body.description;
-    let product=new Products(title,price,description,imageUrl,productId);
-    product.save()
-            .then(()=>{
-                res.redirect('/admin/products');
-            })
+    Products.findByIdAndUpdate(productId,{title,imageUrl,price,description})
+            .then(()=>res.redirect('/admin/products'))
             .catch((err)=>{
                 console.log(err);
             })
     
 }
-// //Getting Products for admin
+// // //Getting Products for admin
 exports.getAdminProducts=(req,res)=>{
-    Products.fetchAll().then(
+    Products.find().then(
         (products)=>{
             res.render("admin/products",{products:products,docTitle:'Product List',path:'/admin/products'});
         }
     ).catch((err)=>console.log(err));
 }
 
-// //Deleting Products
+// // //Deleting Products
 
 exports.deleteProduct=(req,res)=>{
     let id=req.body.productId;
-    Products.deleteById(id)
+    Products.deleteOne({_id:id})
     .then(()=>res.redirect('/admin/products'))
     .catch((err)=>console.log(err));
 

@@ -3,7 +3,7 @@ const path=require('path');
 
 const express=require('express');
 const app=express();
-const mongoConnect=require('./util/database').mongoConnect;
+// const mongoConnect=require('./util/database').mongoConnect;
 const mongoose=require('mongoose');
 
 const bodyParser=require('body-parser');
@@ -24,9 +24,9 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.urlencoded({extended:false}));
 
 app.use((req, res, next) => {
-    User.findById('5c9a4777703f04403c3bcd26')
+    User.findById('5cb61364734fcc97b09865aa')
       .then(user => {
-        req.user = new User(user.name,user.email,user.cart,user._id);
+        req.user = user;
         next();
       })
       .catch(err => console.log(err));
@@ -47,10 +47,23 @@ app.use(shopRouter);
 // app.use(pageErrorRouter);
 // const server= http.createServer(app);
 
-mongoose.connect('mongodb+srv://hs_1996:23rdmay1996@cluster0-pppnf.mongodb.net/shop?retryWrites=true')
+mongoose.connect('mongodb+srv://hs_1996:23rdmay1996@cluster0-pppnf.mongodb.net/shop?retryWrites=true',{ useNewUrlParser: true })
         .then(()=>{
-          app.listen('3000')
+          console.log('Connected');
+          return app.listen('3000');
         })
+        .then(()=>{
+          User.findOne().then(user=>{
+            if(!user)
+            {
+              let user=new User({name:"Heet Shah",email:"heet1@live.com",cart:{items:[]}})
+             return user.save()
+            }
+            return;
+          })
+              
+        })
+        .then(()=>console.log("User Added"))
         .catch((err)=>{
           console.log(err);
         })
