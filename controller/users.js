@@ -2,7 +2,7 @@ const Products=require('../models/products');
 // const Cart=require('../models/cart');
 exports.getIndexPage=(req,res)=>{
     
-    Products.fetchAll().then(
+    Products.find({}).then(
 
         (products)=>{
             
@@ -15,7 +15,7 @@ exports.getUserProducts=(req,res)=>{
     // Products.fetchAll((products)=>{
     //     res.render("shop/product-list",{products:products,docTitle:'Product List',path:'/product-list'});
     // });
-    Products.fetchAll().then(
+    Products.find({}).then(
         (products)=>{
             res.render("shop/product-list",{products:products,docTitle:'Product List',path:'/product-list'});
         }
@@ -24,16 +24,20 @@ exports.getUserProducts=(req,res)=>{
 }
 exports.getUserCart=(req,res)=>{
     
-    
     req.user
-    .getCart()
-    .then(products =>{
+    .populate('cart.items.productId')
+    .execPopulate()
+    .then(user =>{
+     
+     let products=user.cart.items;
+     console.log(products);
     res.render('shop/cart',{path:'/cart',docTitle:'Cart',products:products})
     })
     .catch(err =>console.log(err));
 }
 exports.postUserCart=(req,res,next)=>{
     let productId=req.body.productId;
+    console.log(productId);
     req.user
     .addToCart(productId)
     .then((result)=>res.redirect('/cart'))

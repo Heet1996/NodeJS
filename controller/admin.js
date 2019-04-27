@@ -3,18 +3,21 @@ const Products=require('../models/products');
 
 exports.getAddProduct=(req,res)=>{
     var editMode=req.query.edit;
+    
     res.render("admin/edit-product",{path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
 };
 exports.postAddProduct=(req,res)=>{
     const title=req.body.title;
     const imageUrl=req.body.imageUrl;
     const price=req.body.price;
-    const description=req.body.description
+    const description=req.body.description;
+
+    let user_id=req.user._id;
     // const userId=req.user._id;
     // const userId=req.user.userId;
-    let product=new Products({title:title,imageUrl:imageUrl,price:price,description:description})
+    let product=new Products({title:title,imageUrl:imageUrl,price:price,description:description,userId:user_id});
     
-    product.save()
+    product.save()    
             .then((result)=>{
                 console.log(result);
                 res.redirect('/admin/products');
@@ -50,12 +53,21 @@ exports.postEditProduct=(req,res,next)=>{
     
 }
 // // //Getting Products for admin
-exports.getAdminProducts=(req,res)=>{
-    Products.find().then(
-        (products)=>{
-            res.render("admin/products",{products:products,docTitle:'Product List',path:'/admin/products'});
-        }
-    ).catch((err)=>console.log(err));
+exports.getAdminProducts = (req, res) => {
+    
+    Products.find()
+        // .select('title price -_id') select only title and price_id
+        // .populate('userId')    populating user with the help to userId
+        .then(
+            (products) => {
+                console.log(products);
+                res.render("admin/products", {
+                    products: products,
+                    docTitle: 'Product List',
+                    path: '/admin/products'
+                });
+            }
+        ).catch((err) => console.log(err));
 }
 
 // // //Deleting Products

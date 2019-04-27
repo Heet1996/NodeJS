@@ -10,10 +10,32 @@ let userSchema=new mongoose.Schema({
     },
     cart:{
         items:[{
-            productId:{type:mongoose.Schema.Types.ObjectId,required:true},
+            productId:{type:mongoose.Schema.Types.ObjectId,ref:'Product',required:true},
             quantity:{type:Number,required:true}
         }]
     }
 
-})
-module.exports=mongoose.model('user',userSchema);
+});
+userSchema.methods.addToCart=function(productId)
+{   console.log(productId);
+    let cartProductIndex=this.cart.items.findIndex(cp=>cp.productId.toString().trim()==productId.toString().trim());
+    let newQuantity=1;
+    let updatedCartItem=[...this.cart.items];
+    console.log(cartProductIndex);
+    if(cartProductIndex>=0)
+    {
+        newQuantity=this.cart.items[cartProductIndex].quantity+1;
+        updatedCartItem[cartProductIndex].quantity=newQuantity;
+        
+        
+    }
+    else{
+        updatedCartItem.push({productId:productId.toString().trim(),quantity:1})
+    }
+    let updatedCart={items:updatedCartItem};
+    this.cart=updatedCart;
+    return this.save();
+
+}
+
+module.exports=mongoose.model('User',userSchema);
