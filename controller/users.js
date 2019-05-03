@@ -88,8 +88,9 @@ exports.deleteUserCart=(req,res,next)=>{
 
 exports.getOrders=(req,res)=>{
     req.user
-        .getOrders()
-        .then((orders)=>res.render('shop/orders',{path:'/orders',docTitle:'My Orders',orders:orders}))
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then((user)=>{let orders=user.cart.items; res.render('shop/orders',{path:'/orders',docTitle:'My Orders',orders:orders})})
         .catch((err)=>console.log(err))
     
 }
