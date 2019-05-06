@@ -100,18 +100,16 @@ exports.deleteUserCart = (req, res, next) => {
 // }
 
 exports.getOrders = (req, res) => {
-    req.user
-        .populate('cart.items.productId')
-        .execPopulate()
-        .then((user) => {
-            let orders = user.cart.items;
-            res.render('shop/orders', {
-                path: '/orders',
-                docTitle: 'My Orders',
-                orders: orders
+    Orders.find({'user.userId':req.user._id})
+            .then((orders)=>{
+                res.render('shop/orders', {
+                    path: '/orders',
+                    docTitle: 'My Orders',
+                    orders: orders
+                })
             })
-        })
-        .catch((err) => console.log(err))
+            .catch((err) => console.log(err))
+   
 
 }
 
@@ -132,8 +130,10 @@ exports.postOrder = (req, res) => {
        .populate('cart.items.productId')
        .execPopulate() 
        .then((user)=>{
+           
             let products=user.cart.items.map(i=>{
-              return  {quantity:i.quantity,products:{...i.productId._doc}}
+                console.log(i.productId._doc);
+                return  {quantity:i.quantity,product:{...i.productId._doc}}
             });
             let order=new Orders({
                 user:{
@@ -144,8 +144,10 @@ exports.postOrder = (req, res) => {
                     
                 
             })
+             
             return order.save();
        })
+       .then(()=>req.user.clearCart())
         .then(result => {
             res.redirect('/orders');
         })

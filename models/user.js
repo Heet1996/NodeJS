@@ -17,11 +17,11 @@ let userSchema=new mongoose.Schema({
 
 });
 userSchema.methods.addToCart=function(productId)
-{   console.log(productId);
+{   
     let cartProductIndex=this.cart.items.findIndex(cp=>cp.productId.toString().trim()==productId.toString().trim());
     let newQuantity=1;
     let updatedCartItem=[...this.cart.items];
-    console.log(cartProductIndex);
+    
     if(cartProductIndex>=0)
     {
         newQuantity=this.cart.items[cartProductIndex].quantity+1;
@@ -49,4 +49,5 @@ userSchema.methods.clearCart=function(){
     this.cart.items=[];
     return this.save();
 }
+
 module.exports=mongoose.model('User',userSchema);

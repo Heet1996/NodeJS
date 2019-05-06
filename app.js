@@ -9,6 +9,7 @@ const mongoose=require('mongoose');
 const bodyParser=require('body-parser');
 const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
+const authRouter=require('./routes/auth');
 const User=require('./models/user');
 
 
@@ -46,6 +47,7 @@ app.use(shopRouter);
 //Router for error
 // app.use(pageErrorRouter);
 // const server= http.createServer(app);
+app.use(authRouter);
 
 mongoose.connect('mongodb+srv://hs_1996:23rdmay1996@cluster0-pppnf.mongodb.net/shop?retryWrites=true',{ useNewUrlParser: true })
         .then(()=>{
