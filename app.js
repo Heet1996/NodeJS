@@ -11,7 +11,7 @@ const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
 const authRouter=require('./routes/auth');
 const User=require('./models/user');
-
+const session=require('express-session');
 
 // const pageErrorRouter=require('./routes/pageError');
 
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname,'public')));
 //Registering body-parser
 
 app.use(bodyParser.urlencoded({extended:false}));
-
+app.use(session({secret:'my secret',resave:false,saveUninitialized:false}));
 app.use((req, res, next) => {
     User.findById('5cc44b7bc17d6d5448d4f27f')
       .then(user => {
