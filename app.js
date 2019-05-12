@@ -11,8 +11,14 @@ const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
 const authRouter=require('./routes/auth');
 const User=require('./models/user');
-const session=require('express-session');
+const MONGODB_URI='mongodb+srv://hs_1996:23rdmay1996@cluster0-pppnf.mongodb.net/shop?retryWrites=true';
 
+const session=require('express-session');
+const MongoDBStore=require('connect-mongodb-session')(session);
+const store=new MongoDBStore({
+  uri:MONGODB_URI,
+  collection:'sessions'
+});
 // const pageErrorRouter=require('./routes/pageError');
 
 
@@ -23,16 +29,16 @@ app.use(express.static(path.join(__dirname,'public')));
 //Registering body-parser
 
 app.use(bodyParser.urlencoded({extended:false}));
-app.use(session({secret:'my secret',resave:false,saveUninitialized:false}));
-app.use((req, res, next) => {
-    User.findById('5cc44b7bc17d6d5448d4f27f')
-      .then(user => {
-        req.user = user;
-        next();
-      })
-      .catch(err => console.log(err));
+app.use(session({secret:'my secret',resave:false,saveUninitialized:false,store:store}));
+// app.use((req, res, next) => {
+//     User.findById('5cc44b7bc17d6d5448d4f27f')
+//       .then(user => {
+//         req.user = user;
+//         next();
+//       })
+//       .catch(err => console.log(err));
     
-  });
+//   });
 //Setting up View engine
 
 app.set('view engine','ejs');
@@ -49,7 +55,7 @@ app.use(shopRouter);
 // const server= http.createServer(app);
 app.use(authRouter);
 
-mongoose.connect('mongodb+srv://hs_1996:23rdmay1996@cluster0-pppnf.mongodb.net/shop?retryWrites=true',{ useNewUrlParser: true })
+mongoose.connect(MONGODB_URI,{ useNewUrlParser: true })
         .then(()=>{
           console.log('Connected');
           return app.listen('3000');
