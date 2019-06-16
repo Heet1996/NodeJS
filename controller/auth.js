@@ -20,6 +20,28 @@ exports.postLogin=(req,res,next) => {
         .catch(err => console.log(err));
         
 }
+exports.getSignUp=(req,res,next)=>{
+    res.render('auth/signup',{
+      path:'/signup',
+      docTitle:'SugnUp',
+      isAuthenticated:false
+    })
+}
+
+exports.postSignUp=(req,res,next)=>{
+    var email=req.body.email;
+    var password=req.body.password;
+    var cPassword=req.body.cPassword;
+    User.findOne({email:email})
+        .then((user)=>{
+            if(user)
+            res.redirect('/')
+            var user=new User({email:email,password:password,cart:[]});
+            return user.save();
+        })
+        .then(()=>res.redirect('/login'))
+        .catch((err)=>console.log(err))
+}
 exports.postLogout=(req,res,next)=>{
 
   req.session.destroy((err)=>{console.log("Deleted");console.log(err);res.redirect('/')})

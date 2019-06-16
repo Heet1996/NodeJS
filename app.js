@@ -30,15 +30,19 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(session({secret:'my secret',resave:false,saveUninitialized:false,store:store}));
-// app.use((req, res, next) => {
-//     User.findById('5cc44b7bc17d6d5448d4f27f')
-//       .then(user => {
-//         req.user = user;
-//         next();
-//       })
-//       .catch(err => console.log(err));
+app.use((req, res, next) => {
+  
+    if(!req.session.user)
+    return next();
+    User.findById(req.session.user._id)
+      .then(user => {
+        req.user = user;
+        console.log(req.user);
+        next();
+      })
+      .catch(err => console.log(err));
     
-//   });
+  });
 //Setting up View engine
 
 app.set('view engine','ejs');
@@ -60,18 +64,6 @@ mongoose.connect(MONGODB_URI,{ useNewUrlParser: true })
           console.log('Connected');
           return app.listen('3000');
         })
-        .then(()=>{
-          User.findOne().then(user=>{
-            if(!user)
-            {
-              let user=new User({name:"Heet Shah",email:"heet1@live.com",cart:{items:[]}})
-             return user.save()
-            }
-            return;
-          })
-              
-        })
-        .then(()=>console.log("User Added"))
         .catch((err)=>{
           console.log(err);
         })
