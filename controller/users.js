@@ -10,8 +10,7 @@ exports.getIndexPage = (req, res) => {
             res.render("shop/index", {
                 products: products,
                 docTitle: 'Product List',
-                path: '/index',
-                isAuthenticated:req.session.user
+                path: '/index'
             });
         }
     ).catch((err) => console.log(err));
@@ -26,8 +25,7 @@ exports.getUserProducts = (req, res) => {
             res.render("shop/product-list", {
                 products: products,
                 docTitle: 'Product List',
-                path: '/product-list',
-                isAuthenticated:req.session.user
+                path: '/product-list'
             });
         }
     ).catch((err) => console.log(err));
@@ -42,19 +40,18 @@ exports.getUserCart = (req, res) => {
         .then(user => {
 
             let products = user.cart.items;
-            console.log(products);
+            
             res.render('shop/cart', {
                 path: '/cart',
                 docTitle: 'Cart',
-                products: products,
-                isAuthenticated:req.session.user
+                products: products
             })
         })
         .catch(err => console.log(err));
 }
 exports.postUserCart = (req, res, next) => {
     let productId = req.body.productId;
-    console.log(productId);
+    
     req
         .user
         .addToCart(productId)
@@ -111,8 +108,7 @@ exports.getOrders = (req, res) => {
                 res.render('shop/orders', {
                     path: '/orders',
                     docTitle: 'My Orders',
-                    orders: orders,
-                    isAuthenticated:req.session.user
+                    orders: orders
                 })
             })
             .catch((err) => console.log(err))
@@ -126,8 +122,7 @@ exports.getProduct = (req, res) => {
         res.render('shop/product-details', {
             path: '/orders',
             product: row,
-            docTitle: 'My Orders',
-            isAuthenticated:req.session.user
+            docTitle: 'My Orders'
         });
     }).catch((err) => console.log(err));
 }
@@ -141,12 +136,13 @@ exports.postOrder = (req, res) => {
        .then((user)=>{
            
             let products=user.cart.items.map(i=>{
-                console.log(i.productId._doc);
+                
                 return  {quantity:i.quantity,product:{...i.productId._doc}}
             });
+            console.log(req.user);
             let order=new Orders({
                 user:{
-                    name:req.user.name,
+                    name:req.user.email,
                     userId:req.user
                 },
                 products:products

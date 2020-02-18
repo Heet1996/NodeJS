@@ -5,7 +5,7 @@ exports.getAddProduct=(req,res)=>{
     var editMode=req.query.edit;
     
     res.render("admin/edit-product",
-    {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[],isAuthenticated:req.user});
+    {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
 };
 exports.postAddProduct=(req,res)=>{
     const title=req.body.title;
@@ -20,7 +20,7 @@ exports.postAddProduct=(req,res)=>{
     
     product.save()    
             .then((result)=>{
-                console.log(result);
+                
                 res.redirect('/admin/products');
             })  
             .catch(err=>console.log(err))  
@@ -36,7 +36,7 @@ exports.getEditProduct=(req,res)=>{
             .then((products)=>{
 
                 res.render("admin/edit-product",
-                {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:products,isAuthenticated:req.user});
+                {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:products});
            })
            .catch((err)=>console.log(err));
 };
@@ -62,12 +62,12 @@ exports.getAdminProducts = (req, res) => {
         // .populate('userId')    populating user with the help to userId
         .then(
             (products) => {
-                console.log(products);
+                
                 res.render("admin/products", {
                     products: products,
                     docTitle: 'Product List',
-                    path: '/admin/products',
-                    isAuthenticated:req.user
+                    path: '/admin/products'
+                   
                 });
             }
         ).catch((err) => console.log(err));

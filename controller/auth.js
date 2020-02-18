@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const bcrypt=require('bcrypt');
 
 exports.getLogin = (req, res, next) => {
  
@@ -10,11 +11,25 @@ exports.getLogin = (req, res, next) => {
 };
 exports.postLogin=(req,res,next) => {
 
-  User.findById('5cc44b7bc17d6d5448d4f27f')
+  const email=req.body.email;
+  const password=req.body.password;
+  User.findOne({email})
         .then(user => {
-          req.session.user = user;
-          req.session.isLogged=true;
-          res.redirect('/');
+          if(!user)
+            return res.redirect('/login');
+          return bcrypt
+          .compare(password,user.password)
+          .then((result)=>{
+            if(!result)
+            return res.redirect('/login');
+            
+            req.session.user = user;
+            req.session.isLogged=true;
+            return res.redirect('/'); 
+          })  
+          .catch((err)=>{
+              console.log(err);
+          })
           
         })
         .catch(err => console.log(err));
@@ -35,14 +50,24 @@ exports.postSignUp=(req,res,next)=>{
     User.findOne({email:email})
         .then((user)=>{
             if(user)
-            res.redirect('/')
-            var user=new User({email:email,password:password,cart:[]});
+            return res.redirect('/')
+            else return bcrypt.hash(password,12);  
+            
+        })
+        .then((password)=>{
+            if(password)
+            {var user=new User({email:email,password:password,cart:[]});
             return user.save();
+          }
         })
         .then(()=>res.redirect('/login'))
         .catch((err)=>console.log(err))
 }
 exports.postLogout=(req,res,next)=>{
 
-  req.session.destroy((err)=>{console.log("Deleted");console.log(err);res.redirect('/')})
+  req.session.destroy((err)=>{
+    console.log(err);
+    
+  });
+  res.redirect('/login');
 }
