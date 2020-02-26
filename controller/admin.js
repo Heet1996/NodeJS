@@ -29,14 +29,14 @@ exports.postAddProduct=(req,res)=>{
 exports.getEditProduct=(req,res)=>{
     var editMode=req.query.edit;
     var productId=req.params.productId;
+    let user_id=req.session.user._id;
     if(!editMode)
     return res.redirect('/');
      
-    Products.findById(productId)
+    Products.find({_id:productId})
             .then((products)=>{
-
                 res.render("admin/edit-product",
-                {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:products});
+                {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:products[0]});
            })
            .catch((err)=>console.log(err));
 };
@@ -46,8 +46,9 @@ exports.postEditProduct=(req,res,next)=>{
     let title=req.body.title;
     let imageUrl=req.body.imageUrl;
     let price=req.body.price;
+    let user_id=req.session.user._id;
     let description=req.body.description;
-    Products.findByIdAndUpdate(productId,{title,imageUrl,price,description})
+    Products.findOneAndUpdate({_id:productId,userId:user_id},{title,imageUrl,price,description})
             .then(()=>res.redirect('/admin/products'))
             .catch((err)=>{
                 console.log(err);
@@ -57,7 +58,8 @@ exports.postEditProduct=(req,res,next)=>{
 // // //Getting Products for admin
 exports.getAdminProducts = (req, res) => {
     
-    Products.find()
+    let user_id=req.session.user._id;
+    Products.find({userId:user_id})
         // .select('title price -_id') select only title and price_id
         // .populate('userId')    populating user with the help to userId
         .then(
@@ -77,7 +79,9 @@ exports.getAdminProducts = (req, res) => {
 
 exports.deleteProduct=(req,res)=>{
     let id=req.body.productId;
-    Products.deleteOne({_id:id})
+    let user_id=req.session.user._id; 
+
+    Products.deleteOne({_id:id,userId:user_id})
     .then(()=>res.redirect('/admin/products'))
     .catch((err)=>console.log(err));
 

@@ -22,21 +22,25 @@
     "concurrently": "^4.1.0",
     "ejs-lint": "^0.3.0",
     "express-session": "^1.16.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "nodemon": "^1.18.9"
   },
   "dependencies": {
     "bcrypt": "^3.0.8",
     "body-parser": "^1.18.3",
+    "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^2.1.1",
     "csurf": "^1.11.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
+    "express-validator": "^6.4.0",
     "mongodb": "^3.1.13",
     "mongoose": "^5.5.1",
     "mysql2": "^1.6.5",
+    "nodemailer": "^6.4.2",
     "pug": "^2.0.3",
-    "sequelize": "^4.42.0"
+    "sequelize": "^4.42.0",
+    "superagent": "^5.2.2"
   }
 }

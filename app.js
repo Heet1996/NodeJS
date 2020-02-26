@@ -8,6 +8,7 @@ const mongoose=require('mongoose');
 const session=require('express-session');
 const bodyParser=require('body-parser');
 const csrf=require('csurf');
+const flash=require('connect-flash');
 
 const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
@@ -34,12 +35,14 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(session({secret:'my secret',resave:false,saveUninitialized:false,store:store}));
+app.use(flash());
 app.use(csrfMiddleware);
 
 //Setting up View engine
 
 app.set('view engine','ejs');
 app.set('views','views');
+
 
 //Adding middleware
 
@@ -54,14 +57,14 @@ app.use((req,res,next)=>{
         })
         .catch((err)=>console.log(err));
 })
+
+
 //Adding middleware to send data to all View Pages
 app.use((req,res,next)=>{
   res.locals.isAuthenticated=req.session.isLogged;
   res.locals.csrf_token=req.csrfToken();
   next();
 });
-
-
 
 
 //Router for admins

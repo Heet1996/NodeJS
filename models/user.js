@@ -8,6 +8,8 @@ let userSchema=new mongoose.Schema({
         required:true,
         type:String
     },
+    resetToken:String,
+    resetExpiration:Date,
     cart:{
         items:[{
             productId:{type:mongoose.Schema.Types.ObjectId,ref:'Product',required:true},
