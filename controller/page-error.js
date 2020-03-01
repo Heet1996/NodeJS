@@ -1,4 +1,9 @@
-let getErrorPage=(req,res,next)=>{
-    res.status(404).render("page-error",{docTitle:'Page Error',path:''});
+let get400ErrorPage=(req,res,next)=>{
+    res.status(404).render("error/404",{docTitle:'Page Not Found!',path:'/404'});
 };
-module.exports=getErrorPage;
+
+let get500ErrorPage=(req,res,next)=>{
+    res.status(500).render("error/500",{docTitle:'Error!',path:'/500'});
+};
+
+module.exports={get400ErrorPage,get500ErrorPage};

@@ -1,13 +1,14 @@
 const Products=require('../models/products');
-
+const {validationResult}=require('express-validator');
 
 exports.getAddProduct=(req,res)=>{
     var editMode=req.query.edit;
     
     res.render("admin/edit-product",
-    {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[]});
+    {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:[],err:''});
 };
 exports.postAddProduct=(req,res)=>{
+    let 
     const title=req.body.title;
     const imageUrl=req.body.imageUrl;
     const price=req.body.price;
@@ -17,13 +18,20 @@ exports.postAddProduct=(req,res)=>{
     // const userId=req.user._id;
     // const userId=req.user.userId;
     let product=new Products({title:title,imageUrl:imageUrl,price:price,description:description,userId:user_id});
-    
+    let error=validationResult(req);
+    if(!error.isEmpty()) 
+    {
+        return res.status(422)
+                    .render("admin/edit-product",
+                    {path:"/admin/add-products",docTitle:'Admin',editing:false,product:[],err:error.array()[0].msg}
+                    );
+    }
     product.save()    
             .then((result)=>{
                 
                 res.redirect('/admin/products');
             })  
-            .catch(err=>console.log(err))  
+            .catch(err=>res.send('/500'))  
 }
 // //Edit Product
 exports.getEditProduct=(req,res)=>{

@@ -31,6 +31,17 @@ exports.postLogin = (req, res, next) => {
 
   const email = req.body.email;
   const password = req.body.password;
+  let error=validationResult(req);
+  if(!error.isEmpty())
+  {
+   return res.render('auth/login', {
+    path: '/login',
+    docTitle: 'Login',
+    isAuthenticated: false,
+    err: error.array()[0].msg
+  });
+  }
+
   User.findOne({
       email
     })
@@ -68,7 +79,8 @@ exports.getSignUp = (req, res, next) => {
     path: '/signup',
     docTitle: 'SignUp',
     isAuthenticated: false,
-    err:msg
+    err:msg,
+    oldValue:{email:"",password:"",cPassword:""}
   })
 }
 
@@ -85,7 +97,8 @@ exports.postSignUp = (req, res, next) => {
           path: '/signup',
           docTitle: 'SignUp',
           isAuthenticated: false,
-          err:error.array()[0].msg
+          err:error.array()[0].msg,
+          oldValue:{email:email,password:password,cPassword:cPassword}
         })
   }
   User.findOne({

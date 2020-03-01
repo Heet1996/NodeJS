@@ -7,21 +7,21 @@
     <%- include('../includes/navigation.ejs') %>
     <main>
        
-        <form class="login-form" action="/signup" method="POST" novalidate>
+        <form class="login-form" action="/signup" method="POST">
             <%if(err) {%>
                 <h4 class="user-message user-message_error"><%=err %></h4>
                 <%}    %>
             <div class="form-control">
                 <label for="email">E-mail</label>
-                <input type="email" name="email" id="email"/>
+                <input type="email" name="email" id="email" ) value=<%= oldValue.email %> >
             </div>
             <div class="form-control">
                 <label for="password">Enter Password</label>
-                <input type="password" name="password" id="password"/>
+                <input type="password" name="password" id="password" value=<%= oldValue.password %> >
             </div>
             <div class="form-control">
                 <label for="cPassword">Confirm Password</label>
-                <input type="password" name="cPassword" id="cPassword" />
+                <input type="password" name="cPassword" id="cPassword" value=<%= oldValue.cPassword %> >
             </div>
             <button type="submit" class="btn">Sign Up</button>
             <input type="hidden" name="_csrf"  value="<%=csrf_token %>" />

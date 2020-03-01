@@ -6,7 +6,7 @@ const router = express.Router();
 const {check}=require('express-validator');
 
 router.get('/login', authController.getLogin);
-router.post('/login',authController.postLogin);
+router.post('/login',check('email').isEmail().withMessage("Enter a valid Email"),authController.postLogin);
 
 router.get('/signup', authController.getSignUp);
 router.post('/signup', [check('email').isEmail()
@@ -15,7 +15,7 @@ router.post('/signup', [check('email').isEmail()
                        .withMessage("Please validate the password")
                        .isAlphanumeric()
                        .withMessage("Please add alphanumeric characters") 
-                       .custom((value)=>{
+                       .custom((value,{req})=>{
                             if(value!==req.body.cPassword)
                              throw new Error('Password did not match');   
                              return true;

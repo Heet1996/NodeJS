@@ -13,6 +13,7 @@ const flash=require('connect-flash');
 const {adminRouter}=require('./routes/admin_router');
 const shopRouter=require('./routes/shop_router');
 const authRouter=require('./routes/auth');
+const pageErrorRouter=require('./routes/pageError');
 const User=require('./models/user');
 
 
@@ -52,10 +53,13 @@ app.use((req,res,next)=>{
     
     User.findById(req.session.user._id)
         .then((user)=>{
+          if(!user)
+          next();
+
           req.user=user;
           next();
         })
-        .catch((err)=>console.log(err));
+        .catch((err)=>{throw new Error(err)});
 })
 
 
@@ -76,6 +80,8 @@ app.use(shopRouter);
 // app.use(pageErrorRouter);
 // const server= http.createServer(app);
 app.use(authRouter);
+
+app.use(pageErrorRouter);
 
 mongoose.connect(MONGODB_URI,{ useNewUrlParser: true })
         .then(()=>{
