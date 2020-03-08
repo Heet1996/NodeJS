@@ -53,13 +53,14 @@ app.use((req,res,next)=>{
     
     User.findById(req.session.user._id)
         .then((user)=>{
+          throw new Error('Done');
           if(!user)
           next();
 
           req.user=user;
           next();
         })
-        .catch((err)=>{throw new Error(err)});
+        .catch((err)=>{return next(new Error(err))});
 })
 
 
@@ -82,6 +83,10 @@ app.use(shopRouter);
 app.use(authRouter);
 
 app.use(pageErrorRouter);
+
+app.use((error,req,res,next)=>{
+      return res.status(500).render("error/500",{docTitle:'Error!',path:'/500',isAuthenticated:req.session.isLogged,csrf_token:req.csrfToken()});
+})
 
 mongoose.connect(MONGODB_URI,{ useNewUrlParser: true })
         .then(()=>{

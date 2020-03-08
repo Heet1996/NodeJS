@@ -31,10 +31,14 @@ exports.postAddProduct=(req,res)=>{
                 
                 res.redirect('/admin/products');
             })  
-            .catch(err=>res.send('/500'))  
+            .catch(err=>{
+                const error=new Error(err);
+                error.httpStatusCode=500;    
+                return next(error);      
+            })  
 }
 // //Edit Product
-exports.getEditProduct=(req,res)=>{
+exports.getEditProduct=(req,res,next)=>{
     var editMode=req.query.edit;
     var productId=req.params.productId;
     let user_id=req.session.user._id;
@@ -46,7 +50,11 @@ exports.getEditProduct=(req,res)=>{
                 res.render("admin/edit-product",
                 {path:"/admin/add-products",docTitle:'Admin',editing:editMode,product:products[0]});
            })
-           .catch((err)=>console.log(err));
+           .catch((err)=>{
+            const error=new Error(err);
+            error.httpStatusCode=500;    
+            return next(error);  
+           });
 };
 
 exports.postEditProduct=(req,res,next)=>{
@@ -59,7 +67,9 @@ exports.postEditProduct=(req,res,next)=>{
     Products.findOneAndUpdate({_id:productId,userId:user_id},{title,imageUrl,price,description})
             .then(()=>res.redirect('/admin/products'))
             .catch((err)=>{
-                console.log(err);
+                const error=new Error(err);
+                error.httpStatusCode=500;    
+                return next(error);  
             })
     
 }
@@ -80,7 +90,11 @@ exports.getAdminProducts = (req, res) => {
                    
                 });
             }
-        ).catch((err) => console.log(err));
+        ).catch((err) => {
+            const error=new Error(err);
+            error.httpStatusCode=500;    
+            return next(error);  
+        });
 }
 
 // // //Deleting Products
@@ -91,6 +105,10 @@ exports.deleteProduct=(req,res)=>{
 
     Products.deleteOne({_id:id,userId:user_id})
     .then(()=>res.redirect('/admin/products'))
-    .catch((err)=>console.log(err));
+    .catch((err)=>{
+        const error=new Error(err);
+        error.httpStatusCode=500;    
+        return next(error);  
+    });
 
 }
