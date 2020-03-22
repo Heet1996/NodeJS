@@ -3,6 +3,7 @@ const path=require('path');
 
 const express=require('express');
 const app=express();
+const multer=require('multer');
 // const mongoConnect=require('./util/database').mongoConnect;
 const mongoose=require('mongoose');
 const session=require('express-session');
@@ -26,15 +27,30 @@ const store=new MongoDBStore({
   collection:'sessions'
 });
 // const pageErrorRouter=require('./routes/pageError');
+const fileStorage=multer.diskStorage({
+  destination:(req,file,cb)=>{
+      cb(null,'images');
+  },
+  filename:(req,file,cb)=>{
+      cb(null,new Date().getMilliseconds().toString()+'-'+file.originalname);
+  }
+})
 
-
+const fileFilter=(req,file,cb)=>{
+  if(file.mimetype=='image/png' || file.mimetype=='image/jpg' ||file.mimetype=='image/jpeg')
+  cb(null,true);
+  else cb(null,false)
+}
+//Registering body-parser
+app.use(bodyParser.urlencoded({extended:false}));
+//Registering the multer inorder to accept Files (.png,.pdf) in Request body object
+app.use(multer({storage:fileStorage,fileFilter:fileFilter}).single('image'));
 //Below function will register in event loop and returns a server
 // const server= http.createServer(requestHandler(req,res));
 //Adding Static pages
 app.use(express.static(path.join(__dirname,'public')));
-//Registering body-parser
+app.use('/images',express.static(path.join(__dirname,'images')));
 
-app.use(bodyParser.urlencoded({extended:false}));
 app.use(session({secret:'my secret',resave:false,saveUninitialized:false,store:store}));
 app.use(flash());
 app.use(csrfMiddleware);
@@ -53,7 +69,7 @@ app.use((req,res,next)=>{
     
     User.findById(req.session.user._id)
         .then((user)=>{
-          throw new Error('Done');
+          
           if(!user)
           next();
 
@@ -61,6 +77,7 @@ app.use((req,res,next)=>{
           next();
         })
         .catch((err)=>{return next(new Error(err))});
+    
 })
 
 
@@ -85,6 +102,7 @@ app.use(authRouter);
 app.use(pageErrorRouter);
 
 app.use((error,req,res,next)=>{
+      console.log(error);
       return res.status(500).render("error/500",{docTitle:'Error!',path:'/500',isAuthenticated:req.session.isLogged,csrf_token:req.csrfToken()});
 })
 

@@ -10,7 +10,6 @@ router.get('/add-product',isAuth,productController.getAddProduct);
 router.post('/add-product',
             isAuth,
             [check('title').isLength({min:6,max:14}).withMessage("Please check title length"),
-             check('imageUrl').isURL().withMessage("Please enter valid URL"),
              check('price').isDecimal().withMessage("Please enter valid price value"),
              check('title').isLength({min:6,max:14}).isString().withMessage("Please check the description length")  ],
             productController.postAddProduct);

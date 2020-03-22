@@ -1,6 +1,9 @@
 const Products = require('../models/products');
 // const Cart=require('../models/cart');
 const Orders = require('../models/order');
+const fs=require('fs');
+const path=require('path');
+
 exports.getIndexPage = (req, res) => {
 
     Products.find({}).then(
@@ -157,4 +160,21 @@ exports.postOrder = (req, res) => {
             res.redirect('/orders');
         })
         .catch((err) => console.log(err))
+}
+
+
+exports.getInvoice=(req,res)=>{
+    let {orderId}=req.params;
+    let invoiceName=`invoice-${orderId}`;
+    let invoicePath=path.join('data','invoices',invoiceName);
+    fs.readFile(invoicePath,(err,data)=>{
+        if(err)
+        {
+            next(err);
+            console.log(err);
+        }
+        console.log(data);
+        res.send(data);
+        
+    })
 }

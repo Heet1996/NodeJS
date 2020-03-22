@@ -32,14 +32,18 @@
     "connect-mongodb-session": "^2.1.1",
     "csurf": "^1.11.0",
     "ejs": "^2.6.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "express": "^4.16.4",
     "express-handlebars": "^3.0.0",
     "express-validator": "^6.4.0",
     "mongodb": "^3.1.13",
     "mongoose": "^5.5.1",
+    "multer": "^1.4.2",
     "mysql2": "^1.6.5",
     "nodemailer": "^6.4.2",
     "pug": "^2.0.3",
+    "react-test-renderer": "^16.13.0",
     "sequelize": "^4.42.0",
     "superagent": "^5.2.2"
   }

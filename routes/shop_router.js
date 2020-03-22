@@ -15,6 +15,7 @@ router.post("/cart-delete-item", isAuth, userController.deleteUserCart);
 router.use("/orders", isAuth, userController.getOrders);
 router.use("/checkout-order", isAuth, userController.postOrder)
 
+router.use("/orders/:orderId", isAuth, userController.getInvoice);
 module.exports = router;
 
 
